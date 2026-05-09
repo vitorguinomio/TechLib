@@ -10,4 +10,6 @@ void relatorioLivrosDanificados();
 
 void relatorioLeitoresComDivida();
 
+void pagamentoDividaLeitor();
+
 #endif

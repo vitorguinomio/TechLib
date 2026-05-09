@@ -148,6 +148,66 @@ void relatorioLeitoresComDivida() {
 }
 
 
+void pagamentoDividaLeitor() {
+
+    int leitorEscolhido;
+    float valorPago;
+
+    printf("\n===== PAGAMENTO DE DIVIDA =====\n");
+
+    for (int i = 0; i < MAX_LEITORES; i++) {
+
+        if (leitores[i].dividas > 0) {
+            printf("%d - %s (Divida: R$ %.2f)\n",
+                   i,
+                   leitores[i].nome,
+                   leitores[i].dividas);
+        }
+    }
+
+    printf("\nEscolha o leitor: ");
+    if (scanf("%d", &leitorEscolhido) != 1) {
+        printf("Entrada invalida!\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+
+    if (leitorEscolhido < 0 || leitorEscolhido >= MAX_LEITORES || leitores[leitorEscolhido].dividas <= 0) {
+        printf("Leitor invalido ou sem divida.\n");
+        return;
+    }
+
+    printf("Valor a pagar: R$ ");
+    if (scanf("%f", &valorPago) != 1) {
+        printf("Entrada invalida!\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+
+    if (valorPago <= 0) {
+        printf("Valor invalido!\n");
+        return;
+    }
+
+    leitores[leitorEscolhido].dividas -= valorPago;
+    if (leitores[leitorEscolhido].dividas < 0) {
+        leitores[leitorEscolhido].dividas = 0;
+    }
+
+    printf("Pagamento realizado. Divida atual: R$ %.2f\n",
+           leitores[leitorEscolhido].dividas);
+
+    printf("\nDigite 0 para voltar: ");
+    while (scanf("%d", &leitorEscolhido) != 1 || leitorEscolhido != 0) {
+        printf("Digite 0 para voltar: ");
+        while (getchar() != '\n');
+    }
+    getchar();
+}
+
+
 void menuRelatorios() {
 
     int op;
@@ -161,6 +221,7 @@ void menuRelatorios() {
         printf("3 - Emprestimos ultimos 30 dias\n");
         printf("4 - Livros danificados\n");
         printf("5 - Leitores com dividas\n");
+        printf("6 - Pagamento de divida\n");
         printf("0 - Voltar\n");
 
         printf("Escolha: ");
@@ -196,6 +257,10 @@ void menuRelatorios() {
 
             case 5:
                 relatorioLeitoresComDivida();
+                break;
+
+            case 6:
+                pagamentoDividaLeitor();
                 break;
 
             case 0:
