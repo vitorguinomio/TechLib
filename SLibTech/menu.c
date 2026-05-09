@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "menu.h"
 #include "livro.h"
+#include "relatorio.h"
 #include "utils.h"
 
 void menu() {
@@ -14,10 +15,11 @@ void menu() {
         printf("4 - Renovar Emprestimo\n");
         printf("5 - Devolução de Livros\n");
         printf("6 - Avançar Dias\n");
+        printf("7 - Relatórios\n");
         printf("0 - Sair\n");
         printf("Escolha: ");
 
-        op = lerOpcao(0, 6);
+        op = lerOpcao(0, 7);
 
         if (op == -1) {
             printf("Opcao invalida!\n");
@@ -31,6 +33,7 @@ void menu() {
             case 4: renovarEmprestimo(); break;
             case 5: devolucao();break;
             case 6: avancarDias();break;
+            case 7: menuRelatorios(); break;
         }
 
     } while(op != 0);

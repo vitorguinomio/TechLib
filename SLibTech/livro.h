@@ -2,11 +2,22 @@
 #define LIVROS_H
 #define MAX_LIVROS 100
 
+typedef enum {
+    DISPONIVEL,
+    EMPRESTADO,
+    DANIFICADO,
+    IMPRESTAVEL
+} EstadoLivro;
+
 typedef struct {
+
     int id;
     char titulo[50];
     char autor[50];
     int disponivel;
+
+    EstadoLivro estado;
+
 } Livro;
 
 extern Livro livros[MAX_LIVROS];
