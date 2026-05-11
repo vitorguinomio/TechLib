@@ -14,6 +14,8 @@ typedef struct {
     int id;
     char titulo[50];
     char autor[50];
+    char Editora[50];
+    int edicao;
     int disponivel;
 
     EstadoLivro estado;
