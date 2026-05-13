@@ -15,6 +15,7 @@ extern int totalEmprestimos;
 extern Emprestimo emprestimos[MAX_EMPRESTIMOS];
 
 
+void listarEmprestimosPendentes();
 void emprestarLivro();
 void renovarEmprestimo();
 void devolucao();

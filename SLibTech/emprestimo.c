@@ -2,6 +2,7 @@
 #include <string.h>
 #include "emprestimo.h"
 #include "leitor.h"
+#include "relatorio.h"
 
 #define RESET_CURSOR "\033[H"
 
@@ -9,6 +10,48 @@
 Emprestimo emprestimos[MAX_EMPRESTIMOS];
 
 int totalEmprestimos = 0;
+
+static Livro *buscarLivroPorId(int idLivro) {
+    for (int i = 0; i < totalLivros; i++) {
+        if (livros[i].id == idLivro) {
+            return &livros[i];
+        }
+    }
+
+    return NULL;
+}
+
+static Leitor *buscarLeitorPorId(int idLeitor) {
+    for (int i = 0; i < totalLeitores; i++) {
+        if (leitores[i].id == idLeitor) {
+            return &leitores[i];
+        }
+    }
+
+    return NULL;
+}
+
+void listarEmprestimosPendentes() {
+    printf("\n===== EMPRESTIMOS PENDENTES =====\n");
+
+    if (totalEmprestimos == 0) {
+        printf("Nao ha emprestimos pendentes no sistema.\n");
+        return;
+    }
+
+    for (int i = 0; i < totalEmprestimos; i++) {
+        int idLivro = emprestimos[i].idLivro;
+        int idLeitor = emprestimos[i].idLeitor;
+        Livro *livro = buscarLivroPorId(idLivro);
+        Leitor *leitor = buscarLeitorPorId(idLeitor);
+
+        printf("\nID do livro: %d\n", idLivro);
+        printf("Livro: %s\n", livro != NULL ? livro->titulo : "Livro nao encontrado");
+        printf("Leitor: %s\n", leitor != NULL ? leitor->nome : "Leitor nao encontrado");
+        printf("Dias em emprestimo: %d\n", emprestimos[i].dias);
+        printf("-----------------------------\n");
+    }
+}
 
 void emprestarLivro() {
     int idLivro, idLeitor;
@@ -47,6 +90,12 @@ void emprestarLivro() {
 void renovarEmprestimo() {
     int id;
 
+    listarEmprestimosPendentes();
+
+    if (totalEmprestimos == 0) {
+        return;
+    }
+
     printf("\nID do livro: ");
     scanf("%d", &id);
     getchar();
@@ -64,8 +113,15 @@ void renovarEmprestimo() {
 
 void devolucao(){
     int id;
-    int tipoDevolucao;
+    int tipoDevolucao; 
 
+    listarEmprestimosPendentes();
+
+    if (totalEmprestimos == 0) {
+        return;
+    }
+
+    
     printf("\nID do livro: ");
     scanf("%d", &id);
     getchar();

@@ -19,6 +19,16 @@ Livro livros[MAX_LIVROS] = {
 
 int totalLivros = 5;
 
+int gerar_id_Livro() {
+    int max_id = 0;
+    for (int i = 0; i < totalLivros; i++) {
+        if (livros[i].id > max_id) {
+            max_id = livros[i].id;
+        }
+    }
+    return max_id + 1;
+}
+
 int verificar_ano(){
     char entrada[20];
     int ano = 0;
@@ -60,9 +70,7 @@ int verificar_ano(){
 void cadastrarLivro() {
     Livro l;
 
-    printf("\nID: ");
-    scanf("%d", &l.id);
-    getchar(); // limpa buffer
+    
 
     printf("Titulo: ");
     fgets(l.titulo, sizeof(l.titulo), stdin);
@@ -76,11 +84,16 @@ void cadastrarLivro() {
     fgets(l.Editora, sizeof(l.Editora), stdin);
     l.Editora[strcspn(l.Editora, "\n")] = '\0';
     
+    l.id = gerar_id_Livro();
+    printf("\nID: %d\n", l.id);
+    
     l.edicao = verificar_ano();
     
     l.disponivel = 1;
     l.estado = DISPONIVEL;
     livros[totalLivros++] = l;
+
+    
 
     printf("Livro cadastrado!\n");
 }
