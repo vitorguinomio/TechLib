@@ -4,6 +4,7 @@
 #include "leitor.h"
 #include "emprestimo.h"
 #include "estado.h"
+#include "utils.h"
 
 void relatorioEmprestimos(int periodo) {
 
@@ -19,14 +20,17 @@ void relatorioEmprestimos(int periodo) {
 
             encontrou = 1;
 
-            int idLivro = emprestimos[i].idLivro;
-            int idLeitor = emprestimos[i].idLeitor;
+                 int idLivro = emprestimos[i].idLivro;
+                 int idLeitor = emprestimos[i].idLeitor;
 
-            printf("\nLivro: %s\n",
-                   livros[idLivro].titulo);
+                 Livro *lv = buscarLivroPorId(idLivro);
+                 Leitor *le = buscarLeitorPorId(idLeitor);
 
-            printf("Leitor: %s\n",
-                   leitores[idLeitor].nome);
+                 printf("\nLivro: %s\n",
+                     lv != NULL ? lv->titulo : "Livro nao encontrado");
+
+                 printf("Leitor: %s\n",
+                     le != NULL ? le->nome : "Leitor nao encontrado");
 
             printf("Dias desde emprestimo: %d\n",
                    diferenca);
@@ -39,18 +43,7 @@ void relatorioEmprestimos(int periodo) {
         printf("Nenhum emprestimo encontrado.\n");
     }
 
-    int op;
-
-    printf("\nDigite 0 para voltar: ");
-
-    while (scanf("%d", &op) != 1 || op != 0) {
-
-        printf("Digite 0 para voltar: ");
-
-        while(getchar() != '\n');
-    }
-
-    getchar();
+    esperarVoltar();
 }
 
 
@@ -67,16 +60,16 @@ void relatorioLivrosDanificados() {
 
             encontrou = 1;
 
-            printf("\nID: %d\n", livros[i].id);
+                 printf("\nID: %d\n", livros[i].id);
 
-            printf("Titulo: %s\n",
-                   livros[i].titulo);
+                 printf("Titulo: %s\n",
+                     livros[i].titulo);
 
-            printf("Autor: %s\n",
-                   livros[i].autor);
+                 printf("Autor: %s\n",
+                     livros[i].autor);
 
-            printf("Estado: %s\n",
-                   textoEstado(livros[i].estado));
+                 printf("Estado: %s\n",
+                     textoEstado(livros[i].estado));
 
             printf("-----------------------------\n");
         }
@@ -86,18 +79,7 @@ void relatorioLivrosDanificados() {
         printf("Nenhum livro danificado.\n");
     }
 
-    int op;
-
-    printf("\nDigite 0 para voltar: ");
-
-    while (scanf("%d", &op) != 1 || op != 0) {
-
-        printf("Digite 0 para voltar: ");
-
-        while(getchar() != '\n');
-    }
-
-    getchar();
+    esperarVoltar();
 }
 
 
@@ -133,18 +115,7 @@ void relatorioLeitoresComDivida() {
         printf("Nenhum leitor com dividas.\n");
     }
 
-    int op;
-
-    printf("\nDigite 0 para voltar: ");
-
-    while (scanf("%d", &op) != 1 || op != 0) {
-
-        printf("Digite 0 para voltar: ");
-
-        while(getchar() != '\n');
-    }
-
-    getchar();
+    esperarVoltar();
 }
 
 
@@ -155,56 +126,49 @@ void pagamentoDividaLeitor() {
 
     printf("\n===== PAGAMENTO DE DIVIDA =====\n");
 
-    for (int i = 0; i < MAX_LEITORES; i++) {
-
+    for (int i = 0; i < totalLeitores; i++) {
         if (leitores[i].dividas > 0) {
             printf("%d - %s (Divida: R$ %.2f)\n",
-                   i,
+                   leitores[i].id,
                    leitores[i].nome,
                    leitores[i].dividas);
         }
     }
 
-    printf("\nEscolha o leitor: ");
-    if (scanf("%d", &leitorEscolhido) != 1) {
+    char buf[64];
+    if (fgets(buf, sizeof(buf), stdin) == NULL) return;
+    printf("\nEscolha o leitor (ID): ");
+    if (fgets(buf, sizeof(buf), stdin) == NULL) return;
+    if (sscanf(buf, "%d", &leitorEscolhido) != 1) {
         printf("Entrada invalida!\n");
-        while (getchar() != '\n');
         return;
     }
-    getchar();
 
-    if (leitorEscolhido < 0 || leitorEscolhido >= MAX_LEITORES || leitores[leitorEscolhido].dividas <= 0) {
+    Leitor *le = buscarLeitorPorId(leitorEscolhido);
+    if (le == NULL || le->dividas <= 0) {
         printf("Leitor invalido ou sem divida.\n");
         return;
     }
 
     printf("Valor a pagar: R$ ");
-    if (scanf("%f", &valorPago) != 1) {
+    if (fgets(buf, sizeof(buf), stdin) == NULL) return;
+    if (sscanf(buf, "%f", &valorPago) != 1) {
         printf("Entrada invalida!\n");
-        while (getchar() != '\n');
         return;
     }
-    getchar();
 
     if (valorPago <= 0) {
         printf("Valor invalido!\n");
         return;
     }
 
-    leitores[leitorEscolhido].dividas -= valorPago;
-    if (leitores[leitorEscolhido].dividas < 0) {
-        leitores[leitorEscolhido].dividas = 0;
-    }
+    le->dividas -= valorPago;
+    if (le->dividas < 0) le->dividas = 0;
 
     printf("Pagamento realizado. Divida atual: R$ %.2f\n",
-           leitores[leitorEscolhido].dividas);
+           le->dividas);
 
-    printf("\nDigite 0 para voltar: ");
-    while (scanf("%d", &leitorEscolhido) != 1 || leitorEscolhido != 0) {
-        printf("Digite 0 para voltar: ");
-        while (getchar() != '\n');
-    }
-    getchar();
+    esperarVoltar();
 }
 
 

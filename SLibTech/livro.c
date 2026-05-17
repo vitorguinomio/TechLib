@@ -5,6 +5,7 @@
 #include "livro.h"
 #include "emprestimo.h"
 #include "leitor.h"
+#include "utils.h"
 
 #define RESET_CURSOR "\033[H"
 
@@ -18,6 +19,13 @@ Livro livros[MAX_LIVROS] = {
 };
 
 int totalLivros = 5;
+
+Livro *buscarLivroPorId(int id) {
+    for (int i = 0; i < totalLivros; i++) {
+        if (livros[i].id == id) return &livros[i];
+    }
+    return NULL;
+}
 
 int gerar_id_Livro() {
     int max_id = 0;
@@ -83,33 +91,20 @@ void cadastrarLivro() {
     printf("Editora: ");
     fgets(l.Editora, sizeof(l.Editora), stdin);
     l.Editora[strcspn(l.Editora, "\n")] = '\0';
-    
-    l.id = gerar_id_Livro();
-    printf("\nID: %d\n", l.id);
-    
+        
     l.edicao = verificar_ano();
-    
     l.disponivel = 1;
     l.estado = DISPONIVEL;
+    l.id = gerar_id_Livro();
     livros[totalLivros++] = l;
+    printf("\nID: %d\n", l.id);
 
     
 
     printf("Livro cadastrado!\n");
 }
 
-void esperarVoltar() {
-    int op;
-
-    printf("\nDigite 0 para voltar: ");
-
-    while (scanf("%d", &op) != 1 || op != 0) {
-        printf("Entrada invalida! Digite 0: ");
-        while(getchar() != '\n');
-    }
-
-    getchar(); 
-}
+// esperarVoltar moved to utils.c
 
 void listarLivros() {
     printf("\n===== LIVROS =====\n");
@@ -127,12 +122,12 @@ void listarLivros() {
             
            for (int j = 0; j < totalEmprestimos; j++) {
             if (emprestimos[j].idLivro == livros[i].id) {
-
-            int idLeitor = emprestimos[j].idLeitor;
-            printf("Status: Emprestado para %s\n\n",
-            leitores[idLeitor].nome);
-    }
-}
+                int idLeitor = emprestimos[j].idLeitor;
+                Leitor *le = buscarLeitorPorId(idLeitor);
+                printf("Status: Emprestado para %s\n\n",
+                       le != NULL ? le->nome : "Leitor nao encontrado");
+            }
+           }
         }
     }
 

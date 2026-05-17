@@ -15,3 +15,11 @@ int lerOpcao(int min, int max) {
 
     return (int) valor;
 }
+
+void esperarVoltar(void) {
+    int op;
+    do {
+        printf("\nDigite 0 para voltar: ");
+        op = lerOpcao(0, 0);
+    } while (op != 0);
+}

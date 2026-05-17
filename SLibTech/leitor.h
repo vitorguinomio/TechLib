@@ -17,4 +17,5 @@ extern int totalLeitores;
 void listarLeitores();
 void cadastrarLeitor();
 int gerar_id();
+Leitor *buscarLeitorPorId(int id);
 #endif

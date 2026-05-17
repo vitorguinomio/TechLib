@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "leitor.h"
+#include "utils.h"
 
 Leitor leitores[MAX_LEITORES] = {
     {1 ,"Joao", "111", "9999", 0},
@@ -128,9 +129,17 @@ void cadastrarLeitor() {
 
 void listarLeitores() {
     printf("\n===== LEITORES =====\n");
-
-    for (int i = 0; i < MAX_LEITORES; i++) {
-        printf("%d - %s (Divida: %.2f)\n",
-               i, leitores[i].nome, leitores[i].dividas);
+    for (int i = 0; i < totalLeitores; i++) {
+        printf("%d - %s (Divida: R$ %.2f)\n",
+               leitores[i].id, leitores[i].nome, leitores[i].dividas);
     }
+
+    esperarVoltar();
+}
+
+Leitor *buscarLeitorPorId(int id) {
+    for (int i = 0; i < totalLeitores; i++) {
+        if (leitores[i].id == id) return &leitores[i];
+    }
+    return NULL;
 }

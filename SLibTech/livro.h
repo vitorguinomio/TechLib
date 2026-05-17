@@ -31,6 +31,7 @@ void emprestarLivro();
 void renovarEmprestimo();
 void devolucao();
 void avancarDias();
+Livro *buscarLivroPorId(int id);
 
 #endif
 
